@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Navigation } from "@/src/components/molecules/Navigation";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,10 +26,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <div className="min-h-screen bg-gray-50">
+          <div className="mx-auto flex min-h-screen max-w-7xl gap-8 px-6 py-10">
+            <Navigation />
+            <main className="flex-1 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-gray-100">
+              {children}
+            </main>
+          </div>
+        </div>
       </body>
     </html>
   );
