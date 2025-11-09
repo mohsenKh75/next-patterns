@@ -1,27 +1,50 @@
-'use client'
-import { ProductId } from "@/src/PagesComponents/Products/ProductId";
-import { useParams } from "next/navigation";
+import { ProductId } from "@/src/components/PagesComponents/Products/ProductId";
+import { fetchProductById, fetchProducts } from "@/src/services/api/products";
+import { createISRConfig } from "@/src/utils/isr";
+import { cacheLife } from "next/cache";
+import type { Product } from "@/src/services/types/product";
+import { ViewTransition } from "react";
 
-//NOTE: in dynamic pages case remember to suspence the layout children part! 
-export default function Product() {
-  //NOTE: how to fix the fck params ts issue
-  const param = useParams()
+//NOTE: ISR configuration for product pages - ISR pages using a HOF called createISRConfig
+const isrConfig = createISRConfig<Product, number, { productId: string }, Product>({
+  // Fetch all products for generateStaticParams
+  fetchAll: (options) => fetchProducts(options),
+  getId: (product) => product.id,
+  paramName: "productId",
+  fetchById: (id, options) => fetchProductById(id, options),
+  cacheLife: {
+    unit: "hours",
+  },
+  revalidate: 3600,
+  listRevalidate: 86400,
+  pregenerateLimit: 20,
+});
 
-  // dynamic param pages could have some layout to render first
+// Export generateStaticParams for Next.js
+export const generateStaticParams = isrConfig.generateStaticParams;
 
-  return (
-    <ProductId productId={param.productId as string} />
-  )
-
+// Page component with ISR
+interface ProductPageProps {
+  params: Promise<{ productId: string }>;
 }
-// NOTE: we can also render the page dynamic page on server and await the param - what the diff?
 
-// export default async function Product({ params }: { params: { productId: string } }) {
-//   //NOTE: how to fix the fck params ts issue
-//   const param = await(params) 
-//   // dynamic param pages could have some layout to render first
-
-//   return (
-//     <ProductId productId={param.productId} />
-//   )
-// }
+export default async function ProductPage({ params }: ProductPageProps) {
+  // Apply caching - must be at the top level of the component
+  'use cache';
+  if (isrConfig.cacheLife) {
+    cacheLife(isrConfig.cacheLife.unit);
+  }
+  
+  // Await params and extract ID
+  const resolvedParams = await params;
+  const productId = isrConfig.extractId(resolvedParams);
+  
+  // Fetch product data using ISR handler
+  const product = await isrConfig.fetchData(productId);
+  
+  return (
+    <ViewTransition>
+      <ProductId product={product} />
+    </ViewTransition>
+  );
+}

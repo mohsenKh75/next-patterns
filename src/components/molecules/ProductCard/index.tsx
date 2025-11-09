@@ -11,8 +11,12 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       {/* Product Image */}
-      <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
+      <div className="relative aspect-square w-full overflow-hidden bg-gray-100" >
         <Image
+          preload
+          style={{
+            viewTransitionName: `product-image-${product.id}`,
+          }}
           src={product.image}
           alt={product.title}
           fill

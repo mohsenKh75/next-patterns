@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* ---------- Base theme colors ---------- */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -23,4 +24,170 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =========================================================
+   View Transition names for Product Pages
+   ========================================================= */
+
+/* Used for shared element transitions */
+.product-image-container {
+  view-transition-name: product-image;
+}
+
+.product-content-container {
+  view-transition-name: product-content;
+}
+
+/* =========================================================
+   Keyframes for Slide/Fade animations (fallbacks)
+   ========================================================= */
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-80px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(80px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slide-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================================================
+   Animation Utility Classes (Tailwind layer)
+   ========================================================= */
+
+@layer utilities {
+  .animate-slide-in-left {
+    animation: slide-in-left 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-in-up {
+    animation: slide-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-in-down {
+    animation: slide-in-down 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in-scale {
+    animation: fade-in-scale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   View Transition Shared Element Styles
+   ========================================================= */
+
+/* Base View Transition timing for all supported browsers */
+@supports (view-transition-name: none) {
+
+  /* --- Default product image/content transitions --- */
+  ::view-transition-old(product-image),
+  ::view-transition-new(product-image),
+  ::view-transition-old(product-content),
+  ::view-transition-new(product-content) {
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* --- Optional group rules --- */
+  ::view-transition-group(product-image),
+  ::view-transition-group(product-content) {
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* --- Generic handling for dynamically named product images --- */
+  [view-transition-name*="product-image"] {
+    contain: paint;
+  }
+
+  ::view-transition-old(product-image),
+  ::view-transition-new(product-image) {
+    animation-duration: 0.6s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+/* =========================================================
+   Reduced Motion Support
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-slide-in-up,
+  .animate-slide-in-down,
+  .animate-fade-in-scale {
+    animation: fade-in-scale 0.3s ease-out forwards;
+    transform: none;
+  }
+
+  ::view-transition-old(product-image),
+  ::view-transition-new(product-image),
+  ::view-transition-old(product-content),
+  ::view-transition-new(product-content) {
+    animation: none;
+  }
 }
