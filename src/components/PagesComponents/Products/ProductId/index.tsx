@@ -39,7 +39,7 @@ export function ProductId({ product }: ProductIdProps) {
           <p className="text-3xl font-bold">${product.price.toFixed(2)}</p>
           <p className="text-gray-600 leading-relaxed">{product.description}</p>
           <div className="mt-4">
-            <Button>add TCart</Button>
+            <Button>Add to Cart</Button>
           </div>
         </div>
       </div>
