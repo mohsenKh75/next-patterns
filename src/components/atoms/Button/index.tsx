@@ -1,4 +1,5 @@
 //NOTE: component with native event must have be use client on the most bottom child
+// NOTE: consider having the use client always at the childest component.
 'use client'
 
 import React from "react";
