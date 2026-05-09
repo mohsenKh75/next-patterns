@@ -5,7 +5,6 @@ import { cacheLife } from "next/cache";
 import type { Product } from "@/src/services/types/product";
 import { ViewTransition } from "react";
 
-//NOTE: ISR configuration for product pages - ISR pages using a HOF called createISRConfig
 const isrConfig = createISRConfig<Product, number, { productId: string }, Product>({
   // Fetch all products for generateStaticParams
   fetchAll: (options) => fetchProducts(options),
@@ -20,16 +19,13 @@ const isrConfig = createISRConfig<Product, number, { productId: string }, Produc
   pregenerateLimit: 20,
 });
 
-// Export generateStaticParams for Next.js
 export const generateStaticParams = isrConfig.generateStaticParams;
 
-// Page component with ISR
 interface ProductPageProps {
   params: Promise<{ productId: string }>;
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  // Apply caching - must be at the top level of the component
   'use cache';
   if (isrConfig.cacheLife) {
     cacheLife(isrConfig.cacheLife.unit);

@@ -7,33 +7,33 @@ export type CacheLifeUnit = "seconds" | "minutes" | "hours" | "days";
 export interface ISRConfig<TItem, TId = string | number, TData = any> {
   // Function to fetch all items for generateStaticParams
   fetchAll: (options?: { next?: { revalidate?: number } }) => Promise<TItem[]>;
-  
+
   // Extract ID from item (can be string or number)
   getId: (item: TItem) => TId;
-  
+
   // Param name in the route (e.g., "productId", "userId")
   paramName: string;
-  
+
   // Function to fetch a single item by ID
   fetchById: (id: TId, options?: { next?: { revalidate?: number } }) => Promise<TData>;
-  
+
   // Cache configuration
   cacheLife?: {
     unit: CacheLifeUnit;
   };
-  
+
   // Revalidation time in seconds for fetch calls (default: 3600)
   revalidate?: number;
-  
+
   // Revalidation time for the list fetch (for generateStaticParams, default: 86400)
   listRevalidate?: number;
-  
+
   // Limit number of pre-generated paths (default: 20, set to null for all)
   pregenerateLimit?: number | null;
-  
+
   // Optional: Custom ID validation function
   validateId?: (id: string) => boolean;
-  
+
   // Optional: Custom ID transformation (e.g., parse to number)
   transformId?: (id: string) => TId;
 }
@@ -53,12 +53,12 @@ export function createGenerateStaticParams<TItem, TId = string | number>(
       const items = await config.fetchAll({
         next: { revalidate: config.listRevalidate ?? 86400 },
       });
-      
+
       // Apply limit if specified
       const itemsToGenerate = config.pregenerateLimit !== null
         ? items.slice(0, config.pregenerateLimit ?? 20)
         : items;
-      
+
       return itemsToGenerate.map((item) => {
         const id = config.getId(item);
         return {
@@ -86,21 +86,21 @@ export function extractIdFromParams<TId = string | number, TParams extends Recor
   }
 ): TId {
   const paramValue = params[config.paramName];
-  
+
   if (!paramValue) {
     notFound();
   }
-  
+
   // Validate ID if validation function provided
   if (config.validateId && !config.validateId(paramValue)) {
     notFound();
   }
-  
+
   // Transform and return ID
   if (config.transformId) {
     return config.transformId(paramValue);
   }
-  
+
   return paramValue as TId;
 }
 
@@ -121,7 +121,7 @@ export async function fetchISRData<TId = string | number, TData = any>(
     const data = await config.fetchById(id, {
       next: { revalidate: config.revalidate ?? 3600 },
     });
-    
+
     return data;
   } catch (error) {
     console.error(`Error fetching data for ${config.paramName} ${id}:`, error);

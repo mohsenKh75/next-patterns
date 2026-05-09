@@ -5,7 +5,6 @@ import { ProductCardSkeleton } from "@/src/components/atoms/ProductCardSkeleton"
 import { fetchProducts } from "@/src/services/api/products";
 
 async function ProductsGrid() {
-  //NOTE: using fetch for server side req and caching - could work for our home page data?
   const products = await fetchProducts();
 
   return (

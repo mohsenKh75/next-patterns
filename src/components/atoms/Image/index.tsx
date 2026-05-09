@@ -11,5 +11,5 @@ export function SmartImage({ csr = false, ...props }: Props) {
     if (csr) {
         return <ClientImage {...props} smoothPlaceHolder />;
     }
-    return <NextImage {...props} />;
+    return <NextImage  {...props} />;
 }
