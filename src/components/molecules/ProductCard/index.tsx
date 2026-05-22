@@ -20,12 +20,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           src={product.image}
           alt={product.title}
           fill
-          placeholder="blur"
-          blurDataURL={product.image} //NOTE: we could also use a small base64 blur image
-          className='object-contain p-4'
+          className="object-contain p-4"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           csr
-
         />
       </div>
 

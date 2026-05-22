@@ -1,6 +1,8 @@
+"use client";
+
+import Image from "next/image";
 import { Product } from "@/src/services/types/product";
 import { Button } from "@/src/components/atoms/Button";
-import { SmartImage } from "@/src/components/atoms/Image";
 
 interface ProductIdProps {
   product: Product;
@@ -15,7 +17,7 @@ export function ProductId({ product }: ProductIdProps) {
           className="relative aspect-square product-image-container"
 
         >
-          <SmartImage
+          <Image
             preload
             style={{
               viewTransitionName: `product-image-${product.id}`,
